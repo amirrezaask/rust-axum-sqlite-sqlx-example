@@ -1,10 +1,13 @@
 use super::model::Note;
-use axum::extract;
+use axum::extract::{self, Json, State};
 use axum::http::StatusCode;
-use axum::{response::IntoResponse, Json};
+use axum::response::IntoResponse;
 use sqlx::SqlitePool;
+pub async fn some() -> impl IntoResponse {
+    ""
+}
 
-pub async fn index(extract::State(db): extract::State<SqlitePool>) -> impl IntoResponse {
+pub async fn index(State(db): State<SqlitePool>) -> impl IntoResponse {
     let res = sqlx::query_as::<_, Note>("SELECT id, content FROM notes LIMIT 10")
         .fetch_all(&db)
         .await;
@@ -17,10 +20,7 @@ pub async fn index(extract::State(db): extract::State<SqlitePool>) -> impl IntoR
     }
 }
 
-pub async fn new(
-    extract::State(db): extract::State<SqlitePool>,
-    extract::Json(note): extract::Json<Note>,
-) -> impl IntoResponse {
+pub async fn new(State(db): State<SqlitePool>, Json(note): Json<Note>) -> impl IntoResponse {
     let res = sqlx::query("INSERT INTO notes (content) VALUES (?)")
         .bind(note.content)
         .execute(&db)
@@ -34,10 +34,7 @@ pub async fn new(
     }
 }
 
-pub async fn update(
-    extract::State(db): extract::State<SqlitePool>,
-    extract::Json(note): extract::Json<Note>,
-) -> impl IntoResponse {
+pub async fn update(State(db): State<SqlitePool>, Json(note): Json<Note>) -> impl IntoResponse {
     let res = sqlx::query("UPDATE notes SET content=? WHERE id=?")
         .bind(note.content)
         .bind(note.id)
@@ -52,9 +49,10 @@ pub async fn update(
     }
 }
 
+#[axum_macros::debug_handler]
 pub async fn delete(
     extract::Path(id): extract::Path<i32>,
-    extract::State(db): extract::State<SqlitePool>,
+    State(db): State<SqlitePool>,
 ) -> impl IntoResponse {
     let res = sqlx::query("DELETE FROM notes WHERE id=?")
         .bind(id)
