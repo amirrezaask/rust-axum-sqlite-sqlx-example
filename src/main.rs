@@ -2,6 +2,7 @@ use axum::{
     routing::{delete, get, post, put},
     Router,
 };
+mod db;
 mod notes;
 
 #[tokio::main]

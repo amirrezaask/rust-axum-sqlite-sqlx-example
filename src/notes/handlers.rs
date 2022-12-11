@@ -1,30 +1,23 @@
 use super::model::Note;
+use axum::http::StatusCode;
 use axum::{response::IntoResponse, Json};
+use axum::extract;
 
 pub async fn index() -> impl IntoResponse {
-    Json(Note {
+    (StatusCode::OK, Json(vec![Note {
         id: 1,
         content: "Hello World".to_string(),
-    })
+    }]))
 }
 
-pub async fn new() -> impl IntoResponse {
-    Json(Note {
-        id: 1,
-        content: "Hello World".to_string(),
-    })
+pub async fn new(extract::Json(note): extract::Json<Note>) -> impl IntoResponse {
+    (StatusCode::CREATED, Json(note))
 }
 
-pub async fn update() -> impl IntoResponse {
-    Json(Note {
-        id: 1,
-        content: "Hello World".to_string(),
-    })
+pub async fn update(extract::Json(note): extract::Json<Note>) -> impl IntoResponse {
+    (StatusCode::NO_CONTENT, Json(note))
 }
 
 pub async fn delete() -> impl IntoResponse {
-    Json(Note {
-        id: 1,
-        content: "Hello World".to_string(),
-    })
+    StatusCode::NO_CONTENT
 }
