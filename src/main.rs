@@ -1,7 +1,3 @@
-// use std::sync::Arc;
-
-use std::sync::Arc;
-
 use axum::{routing::get, Router};
 use sqlx::sqlite::SqlitePoolOptions;
 
