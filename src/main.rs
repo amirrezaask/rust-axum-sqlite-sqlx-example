@@ -1,7 +1,6 @@
 use axum::{routing::get, Router};
 use sqlx::sqlite::SqlitePoolOptions;
 
-mod db;
 mod notes;
 
 #[tokio::main]
