@@ -1,10 +1,3 @@
-# backpack
-is sort of like a personal cloud suite, all tools, all files I need all time.
+# rust-axum-sqlite-sqlx-example
+Sample project to test axum
 
-## Functionalities
-
-- Notebook: to store all my notes
-    - good search ability on notebook content
-    - simple linking facilities.
-
-- Music player maybe ?
