@@ -1,11 +1,11 @@
 use anyhow::Result;
 use axum::{routing::get, Router};
-use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite};
+use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite, SqlitePool};
 
 mod notes;
 
 async fn migrate(pool: &Pool<Sqlite>) -> Result<()> {
-    let _ = sqlx::query("CREATE TABLE IF NOT EXISTS notes (id integer primary key, content text)")
+    let _ = sqlx::query("CREATE TABLE IF NOT EXISTS notes (id integer primary key AUTOINCREMENT, content text)")
         .execute(pool).await?;
 
 
@@ -15,7 +15,7 @@ async fn migrate(pool: &Pool<Sqlite>) -> Result<()> {
 #[tokio::main]
 async fn main() {
     let conn = SqlitePoolOptions::new()
-        .connect("backpack.sqlite")
+        .connect("backpack.sqlite?mode=rwc")
         .await
         .unwrap();
 
