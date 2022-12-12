@@ -3,9 +3,6 @@ use axum::extract::{self, Json, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use sqlx::SqlitePool;
-pub async fn some() -> impl IntoResponse {
-    ""
-}
 
 pub async fn index(State(db): State<SqlitePool>) -> impl IntoResponse {
     let res = sqlx::query_as::<_, Note>("SELECT id, content FROM notes LIMIT 10")

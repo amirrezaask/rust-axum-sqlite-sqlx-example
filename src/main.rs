@@ -1,14 +1,26 @@
+use anyhow::Result;
 use axum::{routing::get, Router};
-use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite};
 
 mod notes;
+
+async fn migrate(pool: &Pool<Sqlite>) -> Result<()> {
+    let _ = sqlx::query("CREATE TABLE IF NOT EXISTS notes (id integer primary key, content text)")
+        .execute(pool).await?;
+
+
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() {
     let conn = SqlitePoolOptions::new()
-        .connect("sqlite://backpack.sqlite")
+        .connect("backpack.sqlite")
         .await
         .unwrap();
+
+
+    migrate(&conn).await.unwrap();
 
     let app = Router::new()
         .route(
