@@ -2,7 +2,7 @@ use super::model::Note;
 use axum::extract::{self, Json, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use serde::{Serialize, Deserialize};
+use serde::Deserialize;
 use sqlx::SqlitePool;
 
 pub async fn index(State(db): State<SqlitePool>) -> impl IntoResponse {
@@ -23,7 +23,10 @@ pub struct CreateNoteReq {
     content: String,
 }
 
-pub async fn new(State(db): State<SqlitePool>, Json(note): Json<CreateNoteReq>) -> impl IntoResponse {
+pub async fn new(
+    State(db): State<SqlitePool>,
+    Json(note): Json<CreateNoteReq>,
+) -> impl IntoResponse {
     let res = sqlx::query("INSERT INTO notes (content) VALUES (?)")
         .bind(note.content)
         .execute(&db)
